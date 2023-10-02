@@ -16,6 +16,5 @@ namespace NetProtocol
     {
         Add,
         Deleate,
-
     }
 }

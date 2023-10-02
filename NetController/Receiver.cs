@@ -7,7 +7,7 @@ namespace NetController
     {
         private readonly UdpClient _udpClient;
 
-        public event Action<IPEndPoint, TMessage> MessageReceivedEvent;
+        public event Action<IPEndPoint, TMessage> OnReceive;
 
         public Receiver(UdpClient udpClient)
         {

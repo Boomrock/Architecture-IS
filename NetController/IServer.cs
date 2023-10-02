@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NetProtocol;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,8 +9,8 @@ namespace NetController
 {
     internal interface IServer<TMessage, MessageType> where MessageType : Enum
     {
-        public bool Start(Action RequestHandler);
+        public bool Start();
         public void Stop();
-        public void AddRoute(MessageType key, Func<TMessage, string> Handler);
+        public void AddRoute(MessageType key, Func<TMessage, Message> Handler);
     }
 }
