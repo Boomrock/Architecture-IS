@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Net;
 
 namespace NetController
 {
-    internal interface ISender
+    internal interface ISender<TMessage>
     {
+        bool Send(IPEndPoint endPoint, TMessage message);
     }
 }

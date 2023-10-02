@@ -14,7 +14,7 @@ namespace NetController
             this._udpClient = udpClient;
         }
 
-        public void Start(Action RequestHandler)
+        public void Start()
         {
 
         }

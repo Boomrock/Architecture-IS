@@ -1,13 +1,14 @@
-﻿using System;
+﻿using NetProtocol;
+using System;
 using System.Net.Sockets;
 
 namespace NetController
 {
-    internal class Server<TMessage, CommandType> : IServer<TMessage ,CommandType> where CommandType: Enum
+    internal class Server : IServer<Command , CommandType>
     {
-        public readonly Dictionary<Enum, Action<TMessage>> Routes;
-        private readonly IReceiver<TMessage> _receiver;
-        private readonly ISender<TMessage> _sender;
+        public readonly Dictionary<CommandType, Func<Command, string>> Routes;
+        private readonly IReceiver<Command> _receiver;
+        private readonly ISender<Command> _sender;
         private readonly UdpClient _udpClient;
         public Server() { 
             _udpClient = new UdpClient(8808);
@@ -22,10 +23,7 @@ namespace NetController
             return true;
         }
 
-        private void MessageReceivedEventHandler(System.Net.IPEndPoint arg1, int arg2, TMessage arg3)
-        {
-            throw new NotImplementedException();
-        }
+
 
         public void Stop()
         {
@@ -33,7 +31,7 @@ namespace NetController
 
         }
 
-        public void AddRoute(CommandType key, Action<TMessage> Handler)
+        public void AddRoute(CommandType key, Func<Command, string> Handler)
         {
             Routes.Add(key, Handler);
         }

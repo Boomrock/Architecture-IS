@@ -1,12 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Net;
 
 namespace NetController
 {
-    internal interface IReceiver
+    internal interface IReceiver<TMessage> 
     {
+        public event Action<IPEndPoint, TMessage> OnReceive;
+        public void Start();
+        public void Stop();
     }
 }
