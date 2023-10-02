@@ -1,27 +1,58 @@
 ﻿using System.Net;
 using System.Net.Sockets;
+using System.Text.Json;
+using System.Text;
+using NetProtocol;
 
 namespace NetController
 {
-    internal class Receiver<TMessage> : IReceiver<TMessage>
+    public class Receiver<TMessage> : IReceiver<TMessage>
     {
         private readonly UdpClient _udpClient;
+        private readonly CancellationTokenSource _token;
 
         public event Action<IPEndPoint, TMessage> OnReceive;
 
         public Receiver(UdpClient udpClient)
         {
-            this._udpClient = udpClient;
+            _udpClient = udpClient;
+            _token = new CancellationTokenSource();
         }
 
         public void Start()
         {
 
+            _ = Task
+                .Factory
+                .StartNew(() => Receiv(_token));
+            Console.WriteLine("Receiver запущен");
         }
 
+        private async void Receiv(CancellationTokenSource cancellationToken)
+        {
+            try
+            {
+                while (!cancellationToken.IsCancellationRequested)
+                {
+                    var result = await _udpClient.ReceiveAsync();
+                    var JsonString = Encoding.UTF8.GetString(result.Buffer);
+                    var message = JsonSerializer.Deserialize<TMessage>(JsonString);
+                    lock (OnReceive)
+                    {
+                        OnReceive?.Invoke(result.RemoteEndPoint, message);
+                    };
+                }
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+
+        }
         public void Stop()
         {
-
+            _token.Cancel();
+            _udpClient.Close();
         }
     }
 }

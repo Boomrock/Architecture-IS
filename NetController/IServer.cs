@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace NetController
 {
-    internal interface IServer<TMessage, MessageType> where MessageType : Enum
+    public interface IServer<TMessage, MessageType> where MessageType : Enum
     {
         public bool Start();
         public void Stop();

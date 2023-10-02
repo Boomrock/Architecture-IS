@@ -1,11 +1,13 @@
 ﻿using NetProtocol;
 using System;
+using System.Diagnostics;
 using System.Net;
+using System.Net.Http.Headers;
 using System.Net.Sockets;
 
 namespace NetController
 {
-    internal class Server : IServer<Command , CommandType>
+    public class Server : IServer<Command , CommandType>
     {
         public readonly Dictionary<CommandType, Func<Command, Message>> Routes;
         private readonly IReceiver<Command> _receiver;
@@ -14,14 +16,30 @@ namespace NetController
         public Server() { 
             _udpClient = new UdpClient(8808);
             Routes = new();
-            
+            _receiver = new Receiver<Command>(_udpClient);
+            _sender = new Sender<Message>(_udpClient);
+            Console.WriteLine("Сервер создан");
         }
 
         public bool Start()
         {
             _receiver.Start();
             _receiver.OnReceive += MessageReceivedEventHandler;
+            Console.WriteLine("Сервер запущен");
             return true;
+        }
+
+        public void Stop()
+        {
+            _receiver.Stop();
+            _receiver.OnReceive -= MessageReceivedEventHandler;
+            Console.WriteLine("Сервер отключен");
+
+        }
+
+        public void AddRoute(CommandType key, Func<Command, Message> Handler)
+        {
+            Routes.Add(key, Handler);
         }
 
         private void MessageReceivedEventHandler(IPEndPoint endPoint, Command command)
@@ -32,6 +50,7 @@ namespace NetController
                 if (Routes.TryGetValue(command.CommandType, out var handler))
                 {
                     message = handler.Invoke(command);
+
                 }
                 else
                 {
@@ -42,19 +61,10 @@ namespace NetController
             }
             catch (Exception ex)
             {
-                message =  MessageBuilder.BuildException(ex);
+                message = MessageBuilder.BuildException(ex);
             }
+
             _sender.Send(endPoint, message);
-        }
-
-        public void Stop()
-        {
-            _receiver.Stop();
-        }
-
-        public void AddRoute(CommandType key, Func<Command, Message> Handler)
-        {
-            Routes.Add(key, Handler);
         }
     }
 }

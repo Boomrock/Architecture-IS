@@ -2,8 +2,8 @@
 
 namespace NetController
 {
-    internal interface ISender<TMessage>
+    public interface ISender<TMessage>
     {
-        bool Send(IPEndPoint endPoint, TMessage message);
+        void Send(IPEndPoint endPoint, TMessage message);
     }
 }

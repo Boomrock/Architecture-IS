@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace NetController
 {
-    internal class MessageBuilder
+    public class MessageBuilder
     {
         public static Message BuildMessage(string body, MessageType messageType)
         {
