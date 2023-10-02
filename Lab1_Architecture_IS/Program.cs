@@ -1,5 +1,5 @@
 ﻿using Lab1_Architecture_IS.Models;
-using Lab1_Architecture_IS.SCVParser;
+using Lab1_Architecture_IS.CSVParser;
 using System;
 using System.Collections.Generic;
 
@@ -12,9 +12,9 @@ namespace Lab1_Architecture_IS
         private static string delimiters = ";";
         static void Main(string[] args)
         {
-            parser = new CSVParser(delimiters);
+            parser = new CSVParser.CSVParser(delimiters);
             var path = "./a.csv";
-            var csvFileController = new CSVFileController<CSVModel>(path, new CSVParser(delimiters));
+            var csvFileController = new CSVFileController<CSVModel>(path, new CSVParser.CSVParser(delimiters));
             editor = new CSVEditor<CSVModel>(csvFileController);
 
             // Цикл меню

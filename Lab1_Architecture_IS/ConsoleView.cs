@@ -1,5 +1,5 @@
 ﻿using Lab1_Architecture_IS.Models;
-using Lab1_Architecture_IS.SCVParser;
+using Lab1_Architecture_IS.CSVParser;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
@@ -7,16 +7,16 @@ using System.Text;
 
 namespace Lab1_Architecture_IS
 {
-    internal class ConsoleView
+    public class ConsoleView
     {
         private static IEditor<CSVModel> editor;
         private static IParser<CSVModel, string> parser;
         private static string delimiters = ";";
         static void Start()
         {
-            parser = new CSVParser(delimiters);
+            parser = new CSVParser.CSVParser(delimiters);
             var path = "./a.csv";
-            var csvFileController = new CSVFileController<CSVModel>(path, new CSVParser(delimiters));
+            var csvFileController = new CSVFileController<CSVModel>(path, new CSVParser.CSVParser(delimiters));
             editor = new CSVEditor<CSVModel>(csvFileController);
 
             // Цикл меню

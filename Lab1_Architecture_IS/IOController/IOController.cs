@@ -4,7 +4,7 @@ using System.IO;
 
 namespace Lab1_Architecture_IS.IOController
 {
-    abstract class IOController<TDate> : IIOController<TDate>
+    public  abstract class IOController<TDate> : IIOController<TDate>
     {
         protected readonly string _path;
         protected IParser<TDate, string> _parser;

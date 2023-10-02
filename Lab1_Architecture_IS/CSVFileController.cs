@@ -1,12 +1,12 @@
 ﻿using Lab1_Architecture_IS.IOController;
 using Lab1_Architecture_IS.Models;
-using Lab1_Architecture_IS.SCVParser;
+using Lab1_Architecture_IS.CSVParser;
 
 using System.IO;
 
 namespace Lab1_Architecture_IS
 {
-    internal class CSVFileController<Model> : IOController<Model>
+    public class CSVFileController<Model> : IOController<Model>
     {
         public CSVFileController(string path, IParser<Model, string> parser) : base(path)
         {

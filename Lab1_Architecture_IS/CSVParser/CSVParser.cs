@@ -3,9 +3,9 @@ using Microsoft.VisualBasic.FileIO;
 using System;
 using System.Text;
 
-namespace Lab1_Architecture_IS.SCVParser
+namespace Lab1_Architecture_IS.CSVParser
 {
-    class CSVParser : ICSVParser<CSVModel>
+    public class CSVParser : ICSVParser<CSVModel>
     {
         private readonly string _csvtDelimiters;
 

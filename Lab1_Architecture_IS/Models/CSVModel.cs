@@ -1,6 +1,6 @@
 ﻿namespace Lab1_Architecture_IS.Models
 {
-    internal class CSVModel
+    public class CSVModel
     {
         public int Id;
         public string Name;

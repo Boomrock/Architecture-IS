@@ -4,7 +4,7 @@ using System.Data.SqlTypes;
 
 namespace Lab1_Architecture_IS
 {
-    internal class CSVEditor<Model>:IEditor<Model>
+    public class CSVEditor<Model> : IEditor<Model>
     {
         IOController<Model> _csvFileController;
         List<Model> _modelList = new List<Model>();
@@ -65,5 +65,6 @@ namespace Lab1_Architecture_IS
         {
            _csvFileController.Write(models);
         }
+
     }
 }
