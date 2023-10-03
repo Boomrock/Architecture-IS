@@ -1,8 +1,8 @@
 ﻿using System.Net;
 using System.Net.Sockets;
-using System.Text.Json;
 using System.Text;
 using NetProtocol;
+using Newtonsoft.Json;
 
 namespace NetController
 {
@@ -36,7 +36,7 @@ namespace NetController
                 {
                     var result = await _udpClient.ReceiveAsync();
                     var JsonString = Encoding.UTF8.GetString(result.Buffer);
-                    var message = JsonSerializer.Deserialize<TMessage>(JsonString);
+                    var message = JsonConvert.DeserializeObject<TMessage>(JsonString);
                     lock (OnReceive)
                     {
                         OnReceive?.Invoke(result.RemoteEndPoint, message);

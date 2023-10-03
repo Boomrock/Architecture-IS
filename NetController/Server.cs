@@ -50,6 +50,7 @@ namespace NetController
                 if (Routes.TryGetValue(command.CommandType, out var handler))
                 {
                     message = handler.Invoke(command);
+                    Console.WriteLine("Message received");
 
                 }
                 else
@@ -63,7 +64,6 @@ namespace NetController
             {
                 message = MessageBuilder.BuildException(ex);
             }
-
             _sender.Send(endPoint, message);
         }
     }

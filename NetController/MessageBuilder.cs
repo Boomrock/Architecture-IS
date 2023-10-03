@@ -10,7 +10,7 @@ namespace NetController
 {
     public class MessageBuilder
     {
-        public static Message BuildMessage(string body, MessageType messageType)
+        public static Message BuildMessage(string body, MessageType messageType = MessageType.Transfer)
         {
             StringBuilder stringBuilder = new StringBuilder();
             stringBuilder.Append(DateTime.Now);
@@ -57,5 +57,13 @@ namespace NetController
             };
         }
 
+        public static Message BuildTransferMessage(string body, MessageType messageType = MessageType.Transfer)
+        {
+            return new Message()
+            {
+                MessageBody = body,
+                MessageType = messageType
+            };
+        }
     }
 }

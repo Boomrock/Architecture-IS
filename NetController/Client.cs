@@ -6,6 +6,8 @@ namespace NetController
 {
     public class Client : IClient<Command>
     {
+        public event Action<Message> OnReceive;
+
         private readonly UdpClient _udpClient;
         private readonly ISender<Command> _sender;
         private readonly IReceiver<Message> _receiver;
@@ -17,19 +19,13 @@ namespace NetController
             _sender = new Sender<Command>(_udpClient);
             _receiver = new Receiver<Message>(_udpClient);
             _receiver.Start();
-            _receiver.OnReceive += ReceiveHandeler;
+            _receiver.OnReceive += (_, message) => OnReceive?.Invoke(message);
             _endPoint = endPoint;
         }
-
-        private void ReceiveHandeler(System.Net.IPEndPoint arg1, Message arg2)
-        {
-        }
-
         public void Close()
         {
             _udpClient.Close();
             _receiver.Stop();
-            _receiver.OnReceive -= ReceiveHandeler;
         }
 
         public void Send(Command message)

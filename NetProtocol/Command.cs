@@ -8,13 +8,15 @@ namespace NetProtocol
 {
     public struct Command
     {
-        public CommandType CommandType;
-        public Dictionary<Type, Object> Data; 
+        public CommandType CommandType { get; set; }
+        public Dictionary<Type, Object> Data { get; set; }
     }
 
     public enum CommandType
     {
         Add,
-        Deleate,
+        Delete,
+        TransferAll,
+        TransferByIndex
     }
 }

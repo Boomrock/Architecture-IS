@@ -1,11 +1,4 @@
-﻿using Lab1_Architecture_IS.Models;
-using Lab1_Architecture_IS.CSVParser;
-using System;
-using System.Collections.Generic;
-using System.Reflection;
-using System.Text;
-
-namespace Lab1_Architecture_IS
+﻿namespace ConsoleClient
 {
     public class ConsoleView
     {
@@ -17,7 +10,12 @@ namespace Lab1_Architecture_IS
             Console.WriteLine("2) Вывод записи по номеру");
             Console.WriteLine("3) Удаление записи из файла");
             Console.WriteLine("4) Добавление записи в файл");
-            return Console.Read();
+            var str = Console.ReadLine();
+            if (int.TryParse(str, out var result))
+            {
+                return result;
+            }
+            return 0;
         }
 
     
