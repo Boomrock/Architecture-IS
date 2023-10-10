@@ -90,16 +90,17 @@ namespace Server
             Console.ReadLine();
 
         }
-        static T GetValue<T>(Dictionary<Type, object> dictionary)
+        static T GetValue<T>(Dictionary<string, object> dictionary)
         {
 
-            if (dictionary.TryGetValue(typeof(T), out var @object))
+            Type type = typeof(T);
+            if (dictionary.TryGetValue(type.Name, out var @object))
             {
                 return (T)@object;
             }
             else
             {
-                throw new Exception($"Key {typeof(T)} doesn't contains in dictionary");
+                throw new Exception($"Key {nameof(T)} doesn't contains in dictionary");
             }
 
             return default(T);

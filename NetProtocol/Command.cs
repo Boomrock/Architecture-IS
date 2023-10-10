@@ -9,7 +9,7 @@ namespace NetProtocol
     public struct Command
     {
         public CommandType CommandType { get; set; }
-        public Dictionary<Type, Object> Data { get; set; }
+        public Dictionary<string, Object> Data { get; set; }
     }
 
     public enum CommandType

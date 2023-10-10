@@ -33,7 +33,7 @@ namespace ConsoleClient
                             client.Send(new Command()
                             {
                                 CommandType = CommandType.TransferByIndex,
-                                Data = new() {{typeof(Int64), result } }
+                                Data = new() {{nameof(Int64), result } }
                             });
 
                         }
@@ -44,7 +44,7 @@ namespace ConsoleClient
                         {
                             CommandType = CommandType.Delete,
                             Data = new() {
-                                { typeof(int), Console.Read() }
+                                { nameof(Int64), Console.Read() }
                             }
                         });
                         break;
@@ -54,7 +54,7 @@ namespace ConsoleClient
                         {
                             CommandType = CommandType.Delete,
                             Data = new() {
-                                { typeof(CSVModel), parser.Parse( Console.ReadLine()) }
+                                { nameof(CSVModel), parser.Parse( Console.ReadLine()) }
                             }
                         });
                         break;
