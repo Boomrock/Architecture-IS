@@ -17,21 +17,17 @@ namespace Lab1_Architecture_IS.CSVParser
         public CSVModel Parse(string data)
         {
             var field = data.Split(_csvtDelimiters);
-            if (field.Length < 5) return null;
-            var model = new CSVModel();
-            try
-            {
-                model.Id = Int16.Parse(field[0]);
-                model.Name = field[1];
-                model.Type = field[2];
-                model.IsInteractive = Boolean.Parse(field[3]);
-                model.Volume = float.Parse(field[4]);
-            }
-            catch (Exception)
-            {
 
-                
-            }
+            if (field.Length < 5) 
+                return null;
+
+            var model = new CSVModel();
+  
+            model.Id = Int16.Parse(field[0]);
+            model.Name = field[1];
+            model.Type = field[2];
+            model.IsInteractive = Boolean.Parse(field[3]);
+            model.Volume = float.Parse(field[4]);
 
             return model;
         }

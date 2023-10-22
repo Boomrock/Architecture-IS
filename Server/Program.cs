@@ -1,8 +1,10 @@
 ﻿using Lab1_Architecture_IS;
 using Lab1_Architecture_IS.CSVParser;
 using Lab1_Architecture_IS.Models;
+using Lab1_Architecture_IS.DataBase;
 using NetController;
 using NetProtocol;
+using NLog;
 using System.Text;
 
 namespace Server
@@ -11,18 +13,22 @@ namespace Server
     {
         static void Main(string[] args)
         {
-            IParser<CSVModel ,string> parser = new CSVParser(";");
-            IEditor<CSVModel> editor = new CSVEditor<CSVModel>(new CSVFileController<CSVModel>("folder.cvg", parser));
+            NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
+            IParser<CSVModel, string> parser = new CSVParser(";");
+            
+            IEditor<CSVModel> editor = new DataBaseEditor(new DataBaseContext());
             IServer<Command, CommandType> server = new NetController.Server();
             server.AddRoute(CommandType.Add, (command) =>
             {
                 try
                 {
                     editor.Add(
-                        GetValue<CSVModel>(command.Data));
+                       parser.Parse( GetValue<string>(command.Data)));
+                    Logger.Info(command.Data);
                 }
                 catch (Exception ex)
                 {
+                    Logger.Error(ex);
                     return MessageBuilder.BuildException(ex);
                     throw;
                 }
@@ -38,6 +44,7 @@ namespace Server
                 }
                 catch (Exception ex)
                 {
+                    Logger.Error(ex);
                     return MessageBuilder.BuildException(ex);
                     throw;
                 }
@@ -53,6 +60,7 @@ namespace Server
                 }
                 catch (Exception ex)
                 {
+                    Logger.Error(ex);
                     return MessageBuilder.BuildException(ex);
                     throw;
                 }
@@ -79,6 +87,7 @@ namespace Server
                 }
                 catch (Exception ex)
                 {
+                    Logger.Error(ex);
                     return MessageBuilder.BuildException(ex);
                     throw;
                 }
@@ -88,6 +97,8 @@ namespace Server
             server.Start();
 
             Console.ReadLine();
+            server.Stop();
+            editor.Close();
 
         }
         static T GetValue<T>(Dictionary<string, object> dictionary)
