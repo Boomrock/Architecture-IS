@@ -12,6 +12,7 @@ namespace NetController
         private readonly CancellationTokenSource _token;
 
         public event Action<IPEndPoint, TMessage> OnReceive;
+        NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
 
         public Receiver(UdpClient udpClient)
         {
@@ -25,7 +26,7 @@ namespace NetController
             _ = Task
                 .Factory
                 .StartNew(() => Receiv(_token));
-            Console.WriteLine("Receiver запущен");
+            Logger.Info  ("Receiver запущен");
         }
 
         private async void Receiv(CancellationTokenSource cancellationToken)
@@ -45,7 +46,7 @@ namespace NetController
             }
             catch (Exception ex)
             {
-                throw;
+                Logger.Error(ex.Message);
             }
 
         }

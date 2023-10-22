@@ -1,8 +1,5 @@
 ﻿using NetProtocol;
-using System;
-using System.Diagnostics;
 using System.Net;
-using System.Net.Http.Headers;
 using System.Net.Sockets;
 
 namespace NetController
@@ -13,19 +10,21 @@ namespace NetController
         private readonly IReceiver<Command> _receiver;
         private readonly ISender<Message> _sender;
         private readonly UdpClient _udpClient;
+        NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
+
         public Server() { 
             _udpClient = new UdpClient(8808);
             Routes = new();
             _receiver = new Receiver<Command>(_udpClient);
             _sender = new Sender<Message>(_udpClient);
-            Console.WriteLine("Сервер создан");
+            Logger.Info("Сервер создан");
         }
 
         public bool Start()
         {
             _receiver.Start();
             _receiver.OnReceive += MessageReceivedEventHandler;
-            Console.WriteLine("Сервер запущен");
+            Logger.Info("Сервер запущен");
             return true;
         }
 
@@ -33,7 +32,7 @@ namespace NetController
         {
             _receiver.Stop();
             _receiver.OnReceive -= MessageReceivedEventHandler;
-            Console.WriteLine("Сервер отключен");
+            Logger.Info("Сервер отключен");
 
         }
 
@@ -50,7 +49,7 @@ namespace NetController
                 if (Routes.TryGetValue(command.CommandType, out var handler))
                 {
                     message = handler.Invoke(command);
-                    Console.WriteLine("Message received");
+                    Logger.Info("Message received");
 
                 }
                 else
@@ -58,11 +57,14 @@ namespace NetController
                     message = MessageBuilder
                         .BuildException(
                         $"dictionori doesn't contains commandHandler for {command.CommandType} \n");
+                    Logger.Error(message.MessageBody);
                 }
             }
             catch (Exception ex)
             {
                 message = MessageBuilder.BuildException(ex);
+                Logger.Error(ex.Message);
+
             }
             _sender.Send(endPoint, message);
         }
