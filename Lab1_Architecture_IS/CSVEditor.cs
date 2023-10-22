@@ -22,11 +22,16 @@ namespace Lab1_Architecture_IS
             WriteAll(_modelList.ToArray());
         }
 
+        public void Close()
+        {
+            throw new System.NotImplementedException();
+        }
+
         public Model Delete(int line)
         {
             if(_modelList.Count == 0) 
                 ReadAll();
-            if (_modelList.Count > line)
+            if (_modelList.Count <= line)
                 return default;
             var model = _modelList[line];
             _modelList.RemoveAt(line);
@@ -38,7 +43,7 @@ namespace Lab1_Architecture_IS
         {
             if(_modelList.Count == 0)
                 ReadAll();
-            if (_modelList.Count > line)
+            if (_modelList.Count <= line)
                 return default;
             return _modelList[line];
         }
@@ -54,7 +59,7 @@ namespace Lab1_Architecture_IS
         {
             if (_modelList.Count == 0)
                 ReadAll();
-            if (_modelList.Count > line)
+            if (_modelList.Count <= line)
                 return default;
             _modelList[line] = model;
             WriteAll(_modelList.ToArray());

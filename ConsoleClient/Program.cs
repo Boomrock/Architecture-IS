@@ -26,36 +26,42 @@ namespace ConsoleClient
                         });
                         break;
                     case 2:
-                        Console.WriteLine("ВВедите номер записи");
-                        var str =  Console.ReadLine();
-                        if(byte.TryParse(str, out var result))
                         {
-                            client.Send(new Command()
+                            Console.WriteLine("ВВедите номер записи");
+                            var str = Console.ReadLine();
+                            if (int.TryParse(str, out var result))
                             {
-                                CommandType = CommandType.TransferByIndex,
-                                Data = new() {{nameof(Int64), result } }
-                            });
+                                client.Send(new Command()
+                                {
+                                    CommandType = CommandType.TransferByIndex,
+                                    Data = new() { { nameof(Int64), result } }
+                                });
 
+                            }
                         }
                         break;
-                        case 3:
-                        Console.WriteLine("ВВедите номер записи");
-                        client.Send(new Command()
+                   case 3:
                         {
-                            CommandType = CommandType.Delete,
-                            Data = new() {
-                                { nameof(Int64), Console.Read() }
+                            Console.WriteLine("ВВедите номер записи");
+                            var str = Console.ReadLine();
+                            if (int.TryParse(str, out var result))
+                            {
+                                client.Send(new Command()
+                                {
+
+                                    CommandType = CommandType.Delete,
+                                    Data = new() { { nameof(Int64), result } }
+                                });
+
                             }
-                        });
+                        }
                         break;
                         case 4:
                         Console.WriteLine("Введите запись");
                         client.Send(new Command()
                         {
-                            CommandType = CommandType.Delete,
-                            Data = new() {
-                                { nameof(CSVModel), parser.Parse( Console.ReadLine()) }
-                            }
+                            CommandType = CommandType.Add,
+                            Data = new() {{ nameof(String), Console.ReadLine()}}
                         });
                         break;
                     default:
@@ -68,7 +74,6 @@ namespace ConsoleClient
         private static void ReceiveEventHandler(Message message)
         {
             Console.WriteLine(message.MessageBody);
-            Console.ReadLine();
         }
     }
 }

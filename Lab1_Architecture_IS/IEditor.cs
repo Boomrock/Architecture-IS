@@ -9,5 +9,6 @@
         void WriteAll(Model[] models);
         void Add(Model model);
         Model Delete(int line);
+        void Close();
     }
 }
