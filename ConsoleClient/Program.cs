@@ -12,7 +12,7 @@ namespace ConsoleClient
         static void Main(string[] args)
         {
             IParser<CSVModel, string> parser = new CSVParser(";");
-            IClient<Command> client = new  Client(new IPEndPoint(IPAddress.Parse("127.0.0.1"), 8808));
+            IClient<CommandType, Command> client = new  Client(new IPEndPoint(IPAddress.Parse("127.0.0.1"), 8808));
             client.OnReceive += ReceiveEventHandler;
             while(true)
             {

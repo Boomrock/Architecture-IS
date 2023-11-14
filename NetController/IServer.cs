@@ -11,6 +11,6 @@ namespace NetController
     {
         public bool Start();
         public void Stop();
-        public void AddRoute(MessageType key, Func<TMessage, Message> Handler);
+        public void AddRoute(MessageType key, Func<TMessage, TMessage> Handler);
     }
 }

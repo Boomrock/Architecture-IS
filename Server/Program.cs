@@ -7,6 +7,8 @@ using NetProtocol;
 using NLog;
 using System.Text;
 
+using System.Text.Json.Nodes;
+
 namespace Server
 {
     internal class Program
@@ -24,9 +26,15 @@ namespace Server
             {
                 try
                 {
-                    editor.Add(
-                       parser.Parse(GetValue<string>(command.Data)));
-                    Logger.Info(command.Data);
+                    var model = command.Data.Get<CSVModel>("Model");
+                    var csvModel = model as CSVModel;
+                    editor.Add(csvModel);
+
+  
+                    var models = editor.ReadAll();
+                    JsonDictionary data = new();
+                    data.Add("Models", models);
+                    return MessageBuilder.BuildTransferMessage(data, CommandType.TransferAll);
                 }
                 catch (Exception ex)
                 {
@@ -34,14 +42,13 @@ namespace Server
                     return MessageBuilder.BuildException(ex);
                     throw;
                 }
-                return MessageBuilder.BuildMessage($"model added");
 
             });
             server.AddRoute(CommandType.Delete, (command) =>
             {
                 try
                 {
-                    var deleteItem = editor.Delete((int)GetValue<Int64>(command.Data));
+                    var deleteItem = editor.Delete(command.Data.Get<int>("Id"));
                     return MessageBuilder.BuildMessage(parser.Parse(deleteItem) + " has been deleted");
                 }
                 catch (Exception ex)
@@ -56,9 +63,11 @@ namespace Server
             {
                 try
                 {
-                    var index = GetValue<Int64>(command.Data);
-                    var model = editor.Read((int)index);
-                    return MessageBuilder.BuildTransferMessage(parser.Parse(model));
+                    var index = command.Data.Get<int>("Id");
+                    var model = editor.Read(index);
+                    JsonDictionary data = new();
+                    data.Add("Model", model);
+                    return MessageBuilder.BuildTransferMessage(data);
                 }
                 catch (Exception ex)
                 {
@@ -72,29 +81,18 @@ namespace Server
             {
                 try
                 {
-                    var model = editor.ReadAll(); 
+                    var model = editor.ReadAll();
                     var stringBuilder = new StringBuilder();
-                    for (int i = 0; i < model.Length; i++)
-                    {
-                        stringBuilder.AppendLine(parser.Parse(model[i]));
-                    }
-                    if(model != null)
-                    {
-                        return MessageBuilder.BuildTransferMessage(stringBuilder.ToString());
-                    }
-                    else
-                    {
-                        return MessageBuilder.BuildException("Out of range array");
-                    }
+                    JsonDictionary data = new();
+                    data.Add("Models", model);
+                    return MessageBuilder.BuildTransferMessage(data, CommandType.TransferAll);
                 }
                 catch (Exception ex)
                 {
                     Logger.Error(ex);
                     return MessageBuilder.BuildException(ex);
-                    throw;
-                }
-                return MessageBuilder.BuildMessage($"model Delete");
 
+                }
             });
             server.Start();
 
@@ -102,21 +100,6 @@ namespace Server
             server.Stop();
             editor.Close();
 
-        }
-        static T GetValue<T>(Dictionary<string, object> dictionary)
-        {
-
-            Type type = typeof(T);
-            if (dictionary.TryGetValue(type.Name, out var @object))
-            {
-                return (T)@object;
-            }
-            else
-            {
-                throw new Exception($"Key {nameof(T)} doesn't contains in dictionary");
-            }
-
-            return default(T);
         }
     } 
 }

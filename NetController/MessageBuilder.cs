@@ -10,20 +10,21 @@ namespace NetController
 {
     public class MessageBuilder
     {
-        public static Message BuildMessage(string body, MessageType messageType = MessageType.Transfer)
+        public static Command BuildMessage(string body, CommandType messageType = CommandType.Add)
         {
             StringBuilder stringBuilder = new StringBuilder();
             stringBuilder.Append(DateTime.Now);
             stringBuilder.Append(":");
             stringBuilder.Append(body);
-
-            return new Message()
+            JsonDictionary data = new();
+            data.Add("Message", stringBuilder.ToString());
+            return new Command()
             {
-                MessageBody = stringBuilder.ToString(),
-                MessageType = messageType
+                Data = data,
+                CommandType = messageType
             };
         }
-        public static Message BuildException(string body,
+        public static Command BuildException(string body,
         [System.Runtime.CompilerServices.CallerMemberName] string memberName = "",
         [System.Runtime.CompilerServices.CallerFilePath] string sourceFilePath = "",
         [System.Runtime.CompilerServices.CallerLineNumber] int sourceLineNumber = 0)
@@ -35,14 +36,16 @@ namespace NetController
             stringBuilder.Append(memberName);
             stringBuilder.Append(sourceFilePath);
             stringBuilder.Append(sourceLineNumber);
+            JsonDictionary data = new();
+            data.Add("Error", stringBuilder.ToString());
 
-            return new Message()
+            return new Command()
             {
-                MessageBody = stringBuilder.ToString(),
-                MessageType = MessageType.Error
+                Data = data,
+                CommandType = CommandType.Error
             };
         }
-        public static Message BuildException(Exception exception)
+        public static Command BuildException(Exception exception)
         {
             StringBuilder stringBuilder = new StringBuilder();
             stringBuilder.AppendLine("Exception");
@@ -50,19 +53,22 @@ namespace NetController
             stringBuilder.Append(exception.Message);
             stringBuilder.Append(exception.StackTrace);
 
-            return new Message()
+            JsonDictionary data = new();
+            data.Add("Error", stringBuilder.ToString());
+
+            return new Command()
             {
-                MessageBody = stringBuilder.ToString(),
-                MessageType = MessageType.Error
+                Data = data,
+                CommandType = CommandType.Error
             };
         }
 
-        public static Message BuildTransferMessage(string body, MessageType messageType = MessageType.Transfer)
+        public static Command BuildTransferMessage(JsonDictionary data, CommandType messageType = CommandType.TransferByIndex)
         {
-            return new Message()
+            return new Command()
             {
-                MessageBody = body,
-                MessageType = messageType
+                Data = data,
+                CommandType = messageType
             };
         }
     }

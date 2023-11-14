@@ -1,7 +1,7 @@
-﻿using Newtonsoft.Json;
-using System.Net;
+﻿using System.Net;
 using System.Net.Sockets;
 using System.Text;
+using System.Text.Json;
 
 namespace NetController
 {
@@ -17,7 +17,7 @@ namespace NetController
         {
             try
             {
-                var JsonString = JsonConvert.SerializeObject(message);
+                var JsonString = JsonSerializer.Serialize(message);
                 var @byte = Encoding.UTF8.GetBytes(JsonString);
                 Task.Factory.StartNew(() => _udpClient.SendAsync(@byte, endPoint));
             }
