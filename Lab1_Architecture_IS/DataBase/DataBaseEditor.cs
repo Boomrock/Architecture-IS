@@ -17,7 +17,6 @@ namespace Lab1_Architecture_IS.DataBase
         {
             model.Id = null;
             _dataBaseContext.Models.Add(model);
-            _dataBaseContext.SaveChanges();
         }
 
 
@@ -25,7 +24,6 @@ namespace Lab1_Architecture_IS.DataBase
         {
             var model = Read(line);
             _dataBaseContext.Models.Remove(model);
-            _dataBaseContext.SaveChanges();
             return model;
         }
 
@@ -48,19 +46,21 @@ namespace Lab1_Architecture_IS.DataBase
         {
             model.Id = line;
             _dataBaseContext.Models.Update(model);
-            _dataBaseContext.SaveChanges();
             return model;
         }
 
         public void WriteAll(CSVModel[] models)
         {
             _dataBaseContext.Models.AddRange(models);
-            _dataBaseContext.SaveChanges();
         }
         public void Close()
         {
             _dataBaseContext.Dispose();
         }
 
+        public async void Save()
+        {
+            await _dataBaseContext.SaveChangesAsync();
+        }
     }
 }

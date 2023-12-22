@@ -11,22 +11,27 @@ namespace NetController
     public class Receiver<TMessage> : IReceiver<TMessage>
     {
         private readonly UdpClient _udpClient;
+        private readonly int _maxDegreeOfParallelism;
         private readonly CancellationToken _cancellationToken;
         private readonly ConcurrentQueue<(IPEndPoint, TMessage)> _queue; // очередь для хранения сообщений
 
         private readonly Logger _logger = LogManager.GetCurrentClassLogger();
 
 
-        public Receiver(UdpClient udpClient, CancellationToken cancellationToken)
+        public Receiver(UdpClient udpClient, int maxDegreeOfParallelism, CancellationToken cancellationToken)
         {
             _udpClient = udpClient;
+            _maxDegreeOfParallelism = maxDegreeOfParallelism;
             _cancellationToken = cancellationToken;
             _queue = new ConcurrentQueue<(IPEndPoint, TMessage)>();
         }
 
         public void Start()
         {
-            _ = Task.Factory.StartNew(() => Receiv());
+            for (int i = 0; i < _maxDegreeOfParallelism; i++)
+            {
+                _ = Task.Factory.StartNew(() => Receiv());
+            }
         }
 
         private async void Receiv()
@@ -37,7 +42,7 @@ namespace NetController
                 {
                     var result = await _udpClient.ReceiveAsync(_cancellationToken);
                     var JsonString = Encoding.UTF8.GetString(result.Buffer);
-                    var message = JsonSerializer.Deserialize<TMessage>(JsonString);
+                    var message = JsonSerializer.Deserialize<TMessage>(JsonString)!;
                     _queue.Enqueue((result.RemoteEndPoint, message)); // добавляем сообщение в очередь
                 }
             }

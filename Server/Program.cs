@@ -30,11 +30,8 @@ namespace Server
                     var csvModel = model as CSVModel;
                     editor.Add(csvModel);
 
-  
-                    var models = editor.ReadAll();
-                    JsonDictionary data = new();
-                    data.Add("Models", models);
-                    return MessageBuilder.BuildTransferMessage(data, CommandType.TransferAll);
+
+                    return MessageBuilder.BuildMessage("added");
                 }
                 catch (Exception ex)
                 {
@@ -93,6 +90,23 @@ namespace Server
                     return MessageBuilder.BuildException(ex);
 
                 }
+            });
+            server.AddRoute(CommandType.None, (command) =>
+            {
+                return MessageBuilder.BuildMessage("None");
+            });
+            server.AddRoute(CommandType.Save, (command) =>
+            {
+                try
+                {
+                    editor.Save();
+                }
+                catch (Exception ex)
+                {
+                    Logger.Error(ex.Message);
+                }
+                return MessageBuilder.BuildMessage("Save");
+
             });
             server.Start();
 

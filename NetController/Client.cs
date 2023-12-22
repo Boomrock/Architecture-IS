@@ -14,16 +14,17 @@ namespace NetController
         private readonly IReceiver<Command> _receiver;
         private readonly IPEndPoint _endPoint;
         private readonly Handler<Command> _handler;
-        private CancellationToken _cancellationToken;
+        private CancellationTokenSource _cancellationTokenSource;
 
         public Client(IPEndPoint endPoint)
         {
             _udpClient = new UdpClient(5555);
-
+            _cancellationTokenSource = new CancellationTokenSource();
             _sender = new Sender<Command>(_udpClient);
-            _receiver = new Receiver<Command>(_udpClient, _cancellationToken);
-            _handler = new Handler<Command>(_receiver, _cancellationToken, 4, OnReceiveHandler);
-
+            _receiver = new Receiver<Command>(_udpClient,1, _cancellationTokenSource.Token);
+            _handler = new Handler<Command>(_receiver, _cancellationTokenSource.Token, 2, OnReceiveHandler);
+            
+            _handler.Start();
             _receiver.Start();
             _endPoint = endPoint;
 
@@ -38,6 +39,7 @@ namespace NetController
         {
             _udpClient.Close();
             _receiver.Stop();
+            _cancellationTokenSource.Cancel();
         }
 
         public void Send(Command message)

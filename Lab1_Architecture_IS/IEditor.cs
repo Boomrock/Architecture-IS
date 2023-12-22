@@ -10,5 +10,6 @@
         void Add(Model model);
         Model Delete(int line);
         void Close();
+        void Save();
     }
 }

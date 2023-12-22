@@ -55,6 +55,11 @@ namespace Lab1_Architecture_IS
             return models;
         }
 
+        public void Save()
+        {
+            throw new System.NotImplementedException();
+        }
+
         public Model Update(Model model, int line)
         {
             if (_modelList.Count == 0)
