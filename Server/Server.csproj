@@ -1,0 +1,25 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Lab1_Architecture_IS\Lab1_Architecture_IS.csproj" />
+    <ProjectReference Include="..\NetController\NetController.csproj" />
+    <ProjectReference Include="..\NetProtocol\NetProtocol.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="a.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="C:\Users\федор\.nuget\packages\nlog.schema\5.2.4\contentFiles\any\any\NLog.xsd">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+</Project>

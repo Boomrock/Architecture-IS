@@ -1,0 +1,16 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net6.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <UseWPF>true</UseWPF>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Lab1_Architecture_IS\Lab1_Architecture_IS.csproj" />
+    <ProjectReference Include="..\NetController\NetController.csproj" />
+    <ProjectReference Include="..\NetProtocol\NetProtocol.csproj" />
+  </ItemGroup>
+
+</Project>
